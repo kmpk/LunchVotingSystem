@@ -4,8 +4,8 @@ import com.github.lunchvotingsystem.exception.AppException;
 import com.github.lunchvotingsystem.exception.DataConflictException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.*;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
@@ -18,21 +18,23 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import static com.github.lunchvotingsystem.model.Restaurant.EXCEPTION_DUPLICATE_ADDRESS;
+import static com.github.lunchvotingsystem.model.Restaurant.RESTAURANT_ADDRESS_CONSTRAINT;
+
 @RestControllerAdvice
 @AllArgsConstructor
 @Slf4j
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
-    private final MessageSource messageSource;
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
-        ProblemDetail body = ex.updateAndGetBody(this.messageSource, LocaleContextHolder.getLocale());
+        ProblemDetail body = ex.updateAndGetBody(null, LocaleContextHolder.getLocale());
         Map<String, String> invalidParams = new LinkedHashMap<>();
         for (ObjectError error : ex.getBindingResult().getGlobalErrors()) {
-            invalidParams.put(error.getObjectName(), getErrorMessage(error));
+            invalidParams.put(error.getObjectName(), error.getDefaultMessage());
         }
         for (FieldError error : ex.getBindingResult().getFieldErrors()) {
-            invalidParams.put(error.getField(), getErrorMessage(error));
+            invalidParams.put(error.getField(), error.getDefaultMessage());
         }
         body.setProperty("invalid_params", invalidParams);
         body.setStatus(HttpStatus.UNPROCESSABLE_ENTITY);
@@ -51,13 +53,21 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return createProblemDetailExceptionResponse(ex, ex.getStatusCode(), request);
     }
 
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<?> dataIntegrityViolationException(DataIntegrityViolationException ex, WebRequest request) {
+        log.error("DataIntegrityViolationException: {}", ex.getMessage());
+        if (ex.getMessage().contains(RESTAURANT_ADDRESS_CONSTRAINT.toUpperCase())) {
+            ProblemDetail body = createProblemDetail(ex, HttpStatus.UNPROCESSABLE_ENTITY, "Invalid request content.", null, null, request);
+            Map<String, String> invalidParams = new LinkedHashMap<>();
+            invalidParams.put("address", EXCEPTION_DUPLICATE_ADDRESS);
+            body.setProperty("invalid_params", invalidParams);
+            return handleExceptionInternal(ex, body, new HttpHeaders(), HttpStatus.UNPROCESSABLE_ENTITY, request);
+        }
+        return createProblemDetailExceptionResponse(ex, HttpStatus.UNPROCESSABLE_ENTITY, request);
+    }
+
     private ResponseEntity<?> createProblemDetailExceptionResponse(Exception ex, HttpStatusCode statusCode, WebRequest request) {
         ProblemDetail body = createProblemDetail(ex, statusCode, ex.getMessage(), null, null, request);
         return handleExceptionInternal(ex, body, new HttpHeaders(), statusCode, request);
-    }
-
-    private String getErrorMessage(ObjectError error) {
-        return messageSource.getMessage(
-                error.getCode(), error.getArguments(), error.getDefaultMessage(), LocaleContextHolder.getLocale());
     }
 }
