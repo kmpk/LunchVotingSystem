@@ -36,4 +36,8 @@ public class MenusUtil {
     public static DishTo toFromDish(Dish dish) {
         return new DishTo(dish.getName(), dish.getCost());
     }
+
+    public static List<DishTo> tosFromDishes(Collection<Dish> dishes) {
+        return dishes.stream().map(MenusUtil::toFromDish).toList();
+    }
 }
