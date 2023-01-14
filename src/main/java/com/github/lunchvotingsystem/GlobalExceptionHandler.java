@@ -18,8 +18,10 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static com.github.lunchvotingsystem.model.Restaurant.EXCEPTION_DUPLICATE_ADDRESS;
+import static com.github.lunchvotingsystem.model.Dish.DISH_DUPLICATE_NAME_EXCEPTION;
+import static com.github.lunchvotingsystem.model.Dish.DISH_NAME_MENU_DATE_RESTAURANT_CONSTRAINT;
 import static com.github.lunchvotingsystem.model.Restaurant.RESTAURANT_ADDRESS_CONSTRAINT;
+import static com.github.lunchvotingsystem.model.Restaurant.RESTAURANT_DUPLICATE_ADDRESS_EXCEPTION;
 
 @RestControllerAdvice
 @AllArgsConstructor
@@ -57,13 +59,20 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<?> dataIntegrityViolationException(DataIntegrityViolationException ex, WebRequest request) {
         log.error("DataIntegrityViolationException: {}", ex.getMessage());
         if (ex.getMessage().contains(RESTAURANT_ADDRESS_CONSTRAINT.toUpperCase())) {
-            ProblemDetail body = createProblemDetail(ex, HttpStatus.UNPROCESSABLE_ENTITY, "Invalid request content.", null, null, request);
-            Map<String, String> invalidParams = new LinkedHashMap<>();
-            invalidParams.put("address", EXCEPTION_DUPLICATE_ADDRESS);
-            body.setProperty("invalid_params", invalidParams);
-            return handleExceptionInternal(ex, body, new HttpHeaders(), HttpStatus.UNPROCESSABLE_ENTITY, request);
+            return createCustomDataIntegrityViolationResponse(ex, request, "address", RESTAURANT_DUPLICATE_ADDRESS_EXCEPTION);
+        }
+        if (ex.getMessage().contains(DISH_NAME_MENU_DATE_RESTAURANT_CONSTRAINT.toUpperCase())) {
+            return createCustomDataIntegrityViolationResponse(ex, request, "name", DISH_DUPLICATE_NAME_EXCEPTION);
         }
         return createProblemDetailExceptionResponse(ex, HttpStatus.UNPROCESSABLE_ENTITY, request);
+    }
+
+    private ResponseEntity<Object> createCustomDataIntegrityViolationResponse(DataIntegrityViolationException ex, WebRequest request, String field, String exceptionMessage) {
+        ProblemDetail body = createProblemDetail(ex, HttpStatus.UNPROCESSABLE_ENTITY, "Invalid request content.", null, null, request);
+        Map<String, String> invalidParams = new LinkedHashMap<>();
+        invalidParams.put(field, exceptionMessage);
+        body.setProperty("invalid_params", invalidParams);
+        return handleExceptionInternal(ex, body, new HttpHeaders(), HttpStatus.UNPROCESSABLE_ENTITY, request);
     }
 
     private ResponseEntity<?> createProblemDetailExceptionResponse(Exception ex, HttpStatusCode statusCode, WebRequest request) {

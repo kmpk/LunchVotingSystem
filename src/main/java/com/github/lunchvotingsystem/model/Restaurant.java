@@ -19,7 +19,7 @@ import java.util.List;
 @ToString(callSuper = true, exclude = {"dishes"})
 public class Restaurant extends NamedEntity {
     public static final String RESTAURANT_ADDRESS_CONSTRAINT = "uk_restaurant_address";
-    public static final String EXCEPTION_DUPLICATE_ADDRESS = "Restaurant with this address already exists";
+    public static final String RESTAURANT_DUPLICATE_ADDRESS_EXCEPTION = "Restaurant with this address already exists";
 
     @NotBlank
     @Size(min = 2, max = 128)

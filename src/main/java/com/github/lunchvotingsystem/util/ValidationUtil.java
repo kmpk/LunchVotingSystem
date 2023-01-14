@@ -1,8 +1,11 @@
 package com.github.lunchvotingsystem.util;
 
 import com.github.lunchvotingsystem.HasId;
+import com.github.lunchvotingsystem.HasLocalDate;
 import com.github.lunchvotingsystem.exception.IllegalRequestDataException;
 import lombok.experimental.UtilityClass;
+
+import java.time.LocalDate;
 
 @UtilityClass
 public class ValidationUtil {
@@ -22,6 +25,14 @@ public class ValidationUtil {
         }
     }
 
+    public static void assureDateConsistent(HasLocalDate bean, LocalDate date) {
+        if (!bean.isDateSet()) {
+            bean.setDate(date);
+        } else if (!bean.getDate().equals(date)) {
+            throw new IllegalRequestDataException(bean.getClass().getSimpleName() + " must has date=" + date);
+        }
+    }
+
     public static void checkModification(int count, int id) {
         if (count == 0) {
             throw new IllegalRequestDataException("Entity with id=" + id + " not found");
@@ -33,5 +44,11 @@ public class ValidationUtil {
             throw new IllegalRequestDataException("Entity with id=" + id + " not found");
         }
         return obj;
+    }
+
+    public static void checkExisted(boolean exists, int id) {
+        if (!exists) {
+            throw new IllegalRequestDataException("Entity with id=" + id + " not found");
+        }
     }
 }

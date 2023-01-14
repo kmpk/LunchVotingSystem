@@ -13,7 +13,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.github.lunchvotingsystem.model.Restaurant.EXCEPTION_DUPLICATE_ADDRESS;
+import static com.github.lunchvotingsystem.model.Restaurant.RESTAURANT_DUPLICATE_ADDRESS_EXCEPTION;
 import static com.github.lunchvotingsystem.util.validation.NoHtml.EXCEPTION_NO_HTML;
 import static com.github.lunchvotingsystem.web.restaurant.AdminRestaurantController.REST_URL;
 import static com.github.lunchvotingsystem.web.restaurant.RestaurantTestData.*;
@@ -169,7 +169,7 @@ class AdminRestaurantControllerTest extends AbstractControllerTest {
                 .content(JsonUtil.writeValue(updated)))
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity())
-                .andExpect(content().string(containsString(EXCEPTION_DUPLICATE_ADDRESS)));
+                .andExpect(content().string(containsString(RESTAURANT_DUPLICATE_ADDRESS_EXCEPTION)));
     }
 
     @Test
@@ -183,6 +183,6 @@ class AdminRestaurantControllerTest extends AbstractControllerTest {
                 .content(JsonUtil.writeValue(newRestaurant)))
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity())
-                .andExpect(content().string(containsString(EXCEPTION_DUPLICATE_ADDRESS)));
+                .andExpect(content().string(containsString(RESTAURANT_DUPLICATE_ADDRESS_EXCEPTION)));
     }
 }
