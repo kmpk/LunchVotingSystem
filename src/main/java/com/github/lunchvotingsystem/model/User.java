@@ -1,6 +1,5 @@
 package com.github.lunchvotingsystem.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.lunchvotingsystem.HasIdAndEmail;
 import com.github.lunchvotingsystem.util.validation.NoHtml;
@@ -61,11 +60,6 @@ public class User extends NamedEntity implements HasIdAndEmail, Serializable {
     @JoinColumn
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<Role> roles;
-
-    @OneToMany(mappedBy = "user")
-    @OnDelete(action = OnDeleteAction.CASCADE) //https://stackoverflow.com/a/44988100/548473
-    @JsonIgnore
-    private List<Vote> votes = new ArrayList<>();
 
     public User(User u) {
         this(u.id, u.name, u.email, u.password, u.enabled, u.registered, u.roles);
