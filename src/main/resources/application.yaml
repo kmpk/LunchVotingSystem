@@ -45,5 +45,5 @@ server:
 springdoc.swagger-ui.path: /open-api
 
 cache:
-  cache-names: users
+  cache-names: users, restMenu
   caffeine.spec: maximumSize=5000,expireAfterAccess=60s

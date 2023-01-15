@@ -6,6 +6,7 @@ import com.github.lunchvotingsystem.util.ValidationUtil;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +33,7 @@ public class AdminMenuController {
 
     @DeleteMapping("/{id}/menus/{date}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @CacheEvict(value = "restMenu", key = "#date")
     public void delete(@PathVariable int id, @PathVariable LocalDate date) {
         log.info("delete {} of {}", date, id);
         service.deleteExisted(id, date);
@@ -39,6 +41,7 @@ public class AdminMenuController {
 
     @PutMapping(value = "/{id}/menus/{date}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @CacheEvict(value = "restMenu", key = "#date")
     public void update(@Valid @RequestBody MenuTo menu, @PathVariable int id, @PathVariable LocalDate date) {
         log.info("update {} with id={}", menu, id);
         ValidationUtil.assureDateConsistent(menu, date);

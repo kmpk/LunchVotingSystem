@@ -5,6 +5,7 @@ import com.github.lunchvotingsystem.to.RestaurantMenuTo;
 import com.github.lunchvotingsystem.util.RestaurantsUtil;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,6 +29,7 @@ public class RestaurantMenuController {
 
     @GetMapping("/{date}")
     @Transactional(readOnly = true)
+    @Cacheable(cacheNames = "restMenu")
     public List<RestaurantMenuTo> get(@PathVariable LocalDate date) {
         log.info("get {}", date);
         return RestaurantsUtil.parseTuples(repository.getWithTodayDishes(date));
