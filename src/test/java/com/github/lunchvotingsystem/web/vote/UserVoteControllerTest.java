@@ -80,7 +80,6 @@ class UserVoteControllerTest extends AbstractControllerTest {
     void update() throws Exception {
         setFixedTodayClock();
         perform(MockMvcRequestBuilders.put(REST_URL_SLASH + TODAY)
-                .contentType(MediaType.APPLICATION_JSON)
                 .param("restaurantId", RESTAURANT_2_ID + ""))
                 .andDo(print())
                 .andExpect(status().isNoContent());
@@ -90,7 +89,6 @@ class UserVoteControllerTest extends AbstractControllerTest {
     @Test
     void updateUnauthorized() throws Exception {
         perform(MockMvcRequestBuilders.put(REST_URL_SLASH + TODAY)
-                .contentType(MediaType.APPLICATION_JSON)
                 .param("restaurantId", RESTAURANT_1_ID + ""))
                 .andDo(print())
                 .andExpect(status().isUnauthorized());
@@ -101,7 +99,6 @@ class UserVoteControllerTest extends AbstractControllerTest {
     void updateInvalidNotToday() throws Exception {
         setFixedTodayClock();
         perform(MockMvcRequestBuilders.put(REST_URL_SLASH + TODAY.minusDays(1))
-                .contentType(MediaType.APPLICATION_JSON)
                 .param("restaurantId", RESTAURANT_1_ID + ""))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
@@ -114,7 +111,6 @@ class UserVoteControllerTest extends AbstractControllerTest {
     void createInvalidNotToday() throws Exception {
         setFixedTodayClock();
         perform(MockMvcRequestBuilders.put(REST_URL_SLASH + TODAY.minusDays(1))
-                .contentType(MediaType.APPLICATION_JSON)
                 .param("restaurantId", RESTAURANT_1_ID + ""))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
@@ -127,7 +123,6 @@ class UserVoteControllerTest extends AbstractControllerTest {
     void updateInvalidAfterDeadline() throws Exception {
         setFixedTodayClockAfterDeadline();
         perform(MockMvcRequestBuilders.put(REST_URL_SLASH + TODAY)
-                .contentType(MediaType.APPLICATION_JSON)
                 .param("restaurantId", RESTAURANT_1_ID + ""))
                 .andDo(print())
                 .andExpect(status().isBadRequest())

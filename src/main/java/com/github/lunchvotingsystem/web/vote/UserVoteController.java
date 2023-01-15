@@ -31,7 +31,7 @@ public class UserVoteController {
         return ResponseEntity.of(service.findByDate(userId, date));
     }
 
-    @PutMapping(value = "/{date}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/{date}")
     @Operation(summary = "set user vote for restaurant at provided date")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @CacheEvict(value = "voteCounts", key = "#date")
