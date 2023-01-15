@@ -5,6 +5,7 @@ import com.github.lunchvotingsystem.to.VoteTo;
 import com.github.lunchvotingsystem.util.security.AuthUser;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +31,7 @@ public class UserVoteController {
 
     @PutMapping(value = "/{date}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @CacheEvict(value = "voteCounts", key = "#date")
     public void update(@PathVariable LocalDate date, @RequestParam int restaurantId, @AuthenticationPrincipal AuthUser authUser) {
         log.info("update {} with {}", date, restaurantId);
         service.update(authUser.id(), date, restaurantId);

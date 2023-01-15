@@ -4,6 +4,7 @@ import com.github.lunchvotingsystem.repository.VoteRepository;
 import com.github.lunchvotingsystem.to.VoteCountTo;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,6 +26,7 @@ public class RestaurantVotingController {
     private VoteRepository repository;
 
     @GetMapping("/{date}")
+    @Cacheable(cacheNames = "voteCounts")
     public List<VoteCountTo> get(@PathVariable LocalDate date) {
         log.info("get {}", date);
         return repository.countVotesByDate(date).stream()
