@@ -2,13 +2,17 @@ Voting system for deciding where to have lunch.
 
 [local REST API documentation](http://localhost:8889/open-api)
 
+[remote REST API documentation](http://62.113.255.104:8889/open-api)
+
+` Note - remote application time zone is UTC+3 and all data is reset daily at midnight`
+
 <details>
 	<summary> API overview </summary>
 
 ### Guest
 
-`POST http://localhost:8889/api/register` - register new user. After registration admin must give new user "USER" role,
-otherwise that user will be unable to to call any API endpoints
+POST `http://localhost:8889/api/register` - register new user. After registration admin must give new user "USER" role,
+otherwise that user will be unable to call any API endpoints
 
 ### User
 
@@ -16,19 +20,23 @@ All user endpoints requires USER role
 
 #### Profile
 
-`GET http://localhost:8889/api/profile` - get logged user info
-`PUT http://localhost:8889/api/profile` - update logged user info
-`DELETE http://localhost:8889/api/profile` - delete logged user
+GET `http://localhost:8889/api/profile` - get logged user info
+
+PUT `http://localhost:8889/api/profile` - update logged user info
+
+DELETE `http://localhost:8889/api/profile` - delete logged user
 
 #### Restaurants
 
-`GET http://localhost:8889/api/restaurants/menus/{date}` - get all restaurants with menu of the day for provided date
+GET `http://localhost:8889/api/restaurants/menus/{date}` - get all restaurants with menu of the day for provided date
 
 #### Voting
 
-`GET http://localhost:8889/api/profile/votes/{date}` - get logged user vote
-`PUT http://localhost:8889/api/profile/votes/{date}` - vote for restaurant
-`GET http://localhost:8889/api/restaurants/votes/{date}` - get voting result for date
+GET `http://localhost:8889/api/profile/votes/{date}` - get logged user vote
+
+PUT `http://localhost:8889/api/profile/votes/{date}` - vote for restaurant
+
+GET `http://localhost:8889/api/restaurants/votes/{date}` - get voting result for date
 
 ### Admin
 
@@ -36,26 +44,37 @@ All admin endpoints requires ADMIN role
 
 #### Users
 
-`GET http://localhost:8889/api/admin/users/{id}` - get user info
-`PUT http://localhost:8889/api/admin/users/{id}` - update user info
-`DELETE http://localhost:8889/api/admin/users/{id}` - delete user
-`PATCH http://localhost:8889/api/admin/users/{id}` - disable/enable user
-`GET http://localhost:8889/api/admin/users` - get all users info
-`POST http://localhost:8889/api/admin/users` - create user
+GET `http://localhost:8889/api/admin/users/{id}` - get user info
+
+PUT `http://localhost:8889/api/admin/users/{id}` - update user info
+
+DELETE `http://localhost:8889/api/admin/users/{id}` - delete user
+
+PATCH `http://localhost:8889/api/admin/users/{id}` - disable/enable user
+
+GET `http://localhost:8889/api/admin/users` - get all users info
+
+POST `http://localhost:8889/api/admin/users` - create user
 
 #### Restaurants
 
-`GET http://localhost:8889/api/admin/restaurants/{id}` - get restaurant info
-`PUT http://localhost:8889/api/admin/restaurants/{id}` - update restaurant info
-`DELETE http://localhost:8889/api/admin/restaurants/{id}` - delete restaurant
-`GET http://localhost:8889/api/admin/restaurants` - get all restaurants info
-`POST http://localhost:8889/api/admin/restaurants` - create new restaurant
+GET `http://localhost:8889/api/admin/restaurants/{id}` - get restaurant info
+
+PUT `http://localhost:8889/api/admin/restaurants/{id}` - update restaurant info
+
+DELETE `http://localhost:8889/api/admin/restaurants/{id}` - delete restaurant
+
+GET `http://localhost:8889/api/admin/restaurants` - get all restaurants info
+
+POST `http://localhost:8889/api/admin/restaurants` - create new restaurant
 
 #### Menus
 
-`GET http://localhost:8889/api/admin/restaurants/{id}/menus/{date}` - get restaurants menu of the day
-`PUT http://localhost:8889/api/admin/restaurants/{id}/menus/{date}` - update restaurants menu of the day
-`DELETE http://localhost:8889/api/admin/restaurants/{id}/menus/{date}` - delete restaurants menu of the day
+GET `http://localhost:8889/api/admin/restaurants/{id}/menus/{date}` - get restaurants menu of the day
+
+PUT `http://localhost:8889/api/admin/restaurants/{id}/menus/{date}` - update restaurants menu of the day
+
+DELETE `http://localhost:8889/api/admin/restaurants/{id}/menus/{date}` - delete restaurants menu of the day
 
 </details>
 
