@@ -2,7 +2,6 @@ package com.github.lunchvotingsystem.service;
 
 import com.github.lunchvotingsystem.exception.IllegalVoteDayException;
 import com.github.lunchvotingsystem.exception.VoteChangeAfterDeadlineException;
-import com.github.lunchvotingsystem.model.Restaurant;
 import com.github.lunchvotingsystem.model.User;
 import com.github.lunchvotingsystem.model.Vote;
 import com.github.lunchvotingsystem.repository.RestaurantRepository;
@@ -43,10 +42,10 @@ public class VoteService {
     @Transactional
     public void update(int userId, LocalDate date, int restaurantId) {
         checkVoteDay(date);
-        Restaurant restaurant = ValidationUtil.checkExisted(restaurantRepository.getReferenceById(restaurantId), restaurantId);
+        ValidationUtil.checkExisted(restaurantRepository.existsById(restaurantId), restaurantId);
         User user = ValidationUtil.checkExisted(userRepository.getReferenceById(userId), userId);
         Optional<Vote> voteOptional = voteRepository.findByUserIdAndDate(userId, date);
-        Vote newVote = new Vote(user, restaurant, date);
+        Vote newVote = new Vote(user, restaurantRepository.getReferenceById(restaurantId), date);
         voteOptional.ifPresent(v -> {
             checkVoteUpdateRestriction();
             newVote.setId(v.getId());

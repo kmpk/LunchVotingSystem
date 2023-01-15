@@ -129,6 +129,16 @@ class UserVoteControllerTest extends AbstractControllerTest {
                 .andExpect(content().string(containsString(VOTE_CHANGE_AFTER_DEADLINE_EXCEPTION)));
     }
 
+    @Test
+    @WithUserDetails(value = USER_MAIL)
+    void updateInvalid() throws Exception {
+        setFixedTodayClock();
+        perform(MockMvcRequestBuilders.put(REST_URL_SLASH + TODAY)
+                .param("restaurantId", NOT_FOUND + ""))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity());
+    }
+
     private void setFixedTodayClock() {
         service.setClock(Clock.fixed(TODAY.atStartOfDay(ZoneId.systemDefault()).toInstant(), ZoneId.systemDefault()));
     }
