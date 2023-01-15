@@ -11,14 +11,14 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
 
-import static com.github.lunchvotingsystem.util.ValidationUtil.assureIdConsistent;
-import static com.github.lunchvotingsystem.util.ValidationUtil.checkNew;
+import static com.github.lunchvotingsystem.util.ValidationUtil.*;
 
 @RestController
 @RequestMapping(value = AdminRestaurantController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -67,10 +67,12 @@ public class AdminRestaurantController {
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "update restaurant info")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Transactional
     @CacheEvict(value = "restMenu", allEntries = true)
     public void update(@Valid @RequestBody Restaurant restaurant, @PathVariable int id) {
         log.info("update {} with id={}", restaurant, id);
         assureIdConsistent(restaurant, id);
+        checkExisted(repository.existsById(id), id);
         repository.save(restaurant);
     }
 }
