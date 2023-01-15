@@ -18,6 +18,7 @@ import java.util.Optional;
 
 @Service
 @AllArgsConstructor
+@Transactional
 public class MenuService {
     private final RestaurantRepository restaurantRepository;
     private final DishRepository dishRepository;
@@ -32,7 +33,6 @@ public class MenuService {
         return Optional.of(MenusUtil.createMenu(date, dishes));
     }
 
-    @Transactional
     public void deleteExisted(int restaurantId, LocalDate date) {
         ValidationUtil.checkExisted(restaurantRepository.existsById(restaurantId), restaurantId);
         if (dishRepository.deleteByRestaurantIdAndMenuDate(restaurantId, date) == 0) {
@@ -40,7 +40,6 @@ public class MenuService {
         }
     }
 
-    @Transactional
     public void update(int restaurantId, MenuTo menu) {
         Restaurant restaurant = ValidationUtil.checkExisted(restaurantRepository.getReferenceById(restaurantId), restaurantId);
         dishRepository.deleteByRestaurantIdAndMenuDate(restaurantId, menu.getDate());
