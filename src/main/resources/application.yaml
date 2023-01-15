@@ -41,3 +41,5 @@ server.servlet:
     force: true
 server:
   port: 8889
+
+springdoc.swagger-ui.path: /open-api
