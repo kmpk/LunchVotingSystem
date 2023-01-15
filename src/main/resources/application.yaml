@@ -43,3 +43,7 @@ server:
   port: 8889
 
 springdoc.swagger-ui.path: /open-api
+
+cache:
+  cache-names: users
+  caffeine.spec: maximumSize=5000,expireAfterAccess=60s
