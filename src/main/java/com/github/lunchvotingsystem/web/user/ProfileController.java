@@ -4,6 +4,7 @@ import com.github.lunchvotingsystem.model.User;
 import com.github.lunchvotingsystem.to.UserTo;
 import com.github.lunchvotingsystem.util.UsersUtil;
 import com.github.lunchvotingsystem.util.security.AuthUser;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.HttpStatus;
@@ -20,12 +21,14 @@ public class ProfileController extends AbstractUserController {
     static final String REST_URL = "/api/profile";
 
     @GetMapping
+    @Operation(summary = "get logged user info")
     public User get(@AuthenticationPrincipal AuthUser authUser) {
         log.info("get {}", authUser);
         return authUser.getUser();
     }
 
     @DeleteMapping
+    @Operation(summary = "delete logged user")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @CacheEvict(value = "users", allEntries = true)
     public void delete(@AuthenticationPrincipal AuthUser authUser) {
@@ -33,6 +36,7 @@ public class ProfileController extends AbstractUserController {
     }
 
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "update logged user info")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Transactional
     @CacheEvict(value = "users", key = "#userTo.email")

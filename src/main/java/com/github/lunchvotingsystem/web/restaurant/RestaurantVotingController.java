@@ -2,6 +2,7 @@ package com.github.lunchvotingsystem.web.restaurant;
 
 import com.github.lunchvotingsystem.repository.VoteRepository;
 import com.github.lunchvotingsystem.to.VoteCountTo;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
@@ -26,6 +27,7 @@ public class RestaurantVotingController {
     private VoteRepository repository;
 
     @GetMapping("/{date}")
+    @Operation(summary = "get voting result for provided date, if provided date is today result may not be final")
     @Cacheable(cacheNames = "voteCounts")
     public List<VoteCountTo> get(@PathVariable LocalDate date) {
         log.info("get {}", date);

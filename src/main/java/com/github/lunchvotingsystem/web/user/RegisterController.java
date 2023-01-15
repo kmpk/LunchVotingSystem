@@ -3,6 +3,7 @@ package com.github.lunchvotingsystem.web.user;
 import com.github.lunchvotingsystem.model.User;
 import com.github.lunchvotingsystem.to.UserTo;
 import com.github.lunchvotingsystem.util.UsersUtil;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -20,6 +21,7 @@ public class RegisterController extends AbstractUserController {
     static final String REST_URL = "/api/register";
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "register new user")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<User> register(@Valid @RequestBody UserTo userTo) {
         log.info("register {}", userTo);

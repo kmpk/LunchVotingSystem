@@ -3,6 +3,7 @@ package com.github.lunchvotingsystem.web.restaurant;
 import com.github.lunchvotingsystem.service.MenuService;
 import com.github.lunchvotingsystem.to.MenuTo;
 import com.github.lunchvotingsystem.util.ValidationUtil;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,12 +27,14 @@ public class AdminMenuController {
     private final MenuService service;
 
     @GetMapping("/{id}/menus/{date}")
+    @Operation(summary = "get restaurant menu of the day for provided date")
     public ResponseEntity<MenuTo> get(@PathVariable int id, @PathVariable LocalDate date) {
         log.info("get {} of {}", date, id);
         return ResponseEntity.of(service.findByDate(id, date));
     }
 
     @DeleteMapping("/{id}/menus/{date}")
+    @Operation(summary = "delete restaurant menu of the day for provided date")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @CacheEvict(value = "restMenu", key = "#date")
     public void delete(@PathVariable int id, @PathVariable LocalDate date) {
@@ -40,6 +43,7 @@ public class AdminMenuController {
     }
 
     @PutMapping(value = "/{id}/menus/{date}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "create or update restaurant menu of the day for provided date")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @CacheEvict(value = "restMenu", key = "#date")
     public void update(@Valid @RequestBody MenuTo menu, @PathVariable int id, @PathVariable LocalDate date) {

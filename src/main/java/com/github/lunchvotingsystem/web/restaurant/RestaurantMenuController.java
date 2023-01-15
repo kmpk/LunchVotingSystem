@@ -3,6 +3,7 @@ package com.github.lunchvotingsystem.web.restaurant;
 import com.github.lunchvotingsystem.repository.RestaurantRepository;
 import com.github.lunchvotingsystem.to.RestaurantMenuTo;
 import com.github.lunchvotingsystem.util.RestaurantsUtil;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
@@ -27,6 +28,7 @@ public class RestaurantMenuController {
     private final RestaurantRepository repository;
 
     @GetMapping("/{date}")
+    @Operation(summary = "get all restaurants with menu of the day for provided date")
     @Cacheable(cacheNames = "restMenu")
     public List<RestaurantMenuTo> get(@PathVariable LocalDate date) {
         log.info("get {}", date);

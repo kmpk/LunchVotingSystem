@@ -1,6 +1,7 @@
 package com.github.lunchvotingsystem.web.user;
 
 import com.github.lunchvotingsystem.model.User;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Sort;
@@ -25,12 +26,14 @@ public class AdminUserController extends AbstractUserController {
 
     @Override
     @GetMapping("/{id}")
+    @Operation(summary = "get user info")
     public ResponseEntity<User> get(@PathVariable int id) {
         return super.get(id);
     }
 
     @Override
     @DeleteMapping("/{id}")
+    @Operation(summary = "delete user")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @CacheEvict(value = "users", allEntries = true)
     public void delete(@PathVariable int id) {
@@ -38,12 +41,14 @@ public class AdminUserController extends AbstractUserController {
     }
 
     @GetMapping
+    @Operation(summary = "get all users info")
     public List<User> getAll() {
         log.info("getAll");
         return repository.findAll(Sort.by(Sort.Direction.ASC, "name", "email"));
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "create new user")
     public ResponseEntity<User> createWithLocation(@Valid @RequestBody User user) {
         log.info("create {}", user);
         checkNew(user);
@@ -55,6 +60,7 @@ public class AdminUserController extends AbstractUserController {
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "update user info")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @CacheEvict(value = "users", key = "#user.email")
     public void update(@Valid @RequestBody User user, @PathVariable int id) {
@@ -64,12 +70,14 @@ public class AdminUserController extends AbstractUserController {
     }
 
     @GetMapping("/by-email")
+    @Operation(summary = "find user by email")
     public ResponseEntity<User> getByEmail(@RequestParam String email) {
         log.info("getByEmail {}", email);
         return ResponseEntity.of(repository.findByEmailIgnoreCase(email));
     }
 
     @PatchMapping("/{id}")
+    @Operation(summary = "set if user is enabled")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Transactional
     public void enable(@PathVariable int id, @RequestParam boolean enabled) {

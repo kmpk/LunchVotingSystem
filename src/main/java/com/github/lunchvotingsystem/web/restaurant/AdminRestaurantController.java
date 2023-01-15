@@ -2,6 +2,7 @@ package com.github.lunchvotingsystem.web.restaurant;
 
 import com.github.lunchvotingsystem.model.Restaurant;
 import com.github.lunchvotingsystem.repository.RestaurantRepository;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,12 +30,14 @@ public class AdminRestaurantController {
     private final RestaurantRepository repository;
 
     @GetMapping("/{id}")
+    @Operation(summary = "get restaurant info")
     public ResponseEntity<Restaurant> get(@PathVariable int id) {
         log.info("get {}", id);
         return ResponseEntity.of(repository.findById(id));
     }
 
     @DeleteMapping("/{id}")
+    @Operation(summary = "delete restaurant")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @CacheEvict(value = {"restMenu", "voteCounts"}, allEntries = true)
     public void delete(@PathVariable int id) {
@@ -43,12 +46,14 @@ public class AdminRestaurantController {
     }
 
     @GetMapping
+    @Operation(summary = "get all restaurants")
     public List<Restaurant> getAll() {
         log.info("getAll");
         return repository.findAll(Sort.by(Sort.Direction.ASC, "name"));
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "create new restaurant")
     public ResponseEntity<Restaurant> createWithLocation(@Valid @RequestBody Restaurant restaurant) {
         log.info("create {}", restaurant);
         checkNew(restaurant);
@@ -60,6 +65,7 @@ public class AdminRestaurantController {
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "update restaurant info")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @CacheEvict(value = "restMenu", allEntries = true)
     public void update(@Valid @RequestBody Restaurant restaurant, @PathVariable int id) {
