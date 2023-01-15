@@ -7,9 +7,12 @@ Voting system for deciding where to have lunch.
 
 ### Guest
 
-`POST http://localhost:8889/api/register` - register new user
+`POST http://localhost:8889/api/register` - register new user. After registration admin must give new user "USER" role,
+otherwise that user will be unable to to call any API endpoints
 
 ### User
+
+All user endpoints requires USER role
 
 #### Profile
 
@@ -28,6 +31,8 @@ Voting system for deciding where to have lunch.
 `GET http://localhost:8889/api/restaurants/votes/{date}` - get voting result for date
 
 ### Admin
+
+All admin endpoints requires ADMIN role
 
 #### Users
 
