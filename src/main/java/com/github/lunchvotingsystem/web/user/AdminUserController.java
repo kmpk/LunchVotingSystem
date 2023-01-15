@@ -65,6 +65,7 @@ public class AdminUserController extends AbstractUserController {
     @CacheEvict(value = "users", key = "#user.email")
     public void update(@Valid @RequestBody User user, @PathVariable int id) {
         log.info("update {} with id={}", user, id);
+        checkModificationRestriction(id);
         assureIdConsistent(user, id);
         prepareAndSave(user);
     }
@@ -82,6 +83,7 @@ public class AdminUserController extends AbstractUserController {
     @Transactional
     public void enable(@PathVariable int id, @RequestParam boolean enabled) {
         log.info(enabled ? "enable {}" : "disable {}", id);
+        checkModificationRestriction(id);
         User user = repository.getExisted(id);
         user.setEnabled(enabled);
     }

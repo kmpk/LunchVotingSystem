@@ -32,6 +32,7 @@ public class ProfileController extends AbstractUserController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @CacheEvict(value = "users", allEntries = true)
     public void delete(@AuthenticationPrincipal AuthUser authUser) {
+        checkModificationRestriction(authUser.id());
         super.delete(authUser.id());
     }
 
@@ -43,6 +44,7 @@ public class ProfileController extends AbstractUserController {
     public void update(@RequestBody @Valid UserTo userTo, @AuthenticationPrincipal AuthUser authUser) {
         log.info("update {} with id={}", userTo, authUser.id());
         assureIdConsistent(userTo, authUser.id());
+        checkModificationRestriction(authUser.id());
         User user = authUser.getUser();
         prepareAndSave(UsersUtil.updateFromTo(user, userTo));
     }
