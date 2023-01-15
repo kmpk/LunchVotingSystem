@@ -1,7 +1,6 @@
 package com.github.lunchvotingsystem;
 
 import com.github.lunchvotingsystem.exception.AppException;
-import com.github.lunchvotingsystem.exception.DataConflictException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -41,12 +40,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         body.setProperty("invalid_params", invalidParams);
         body.setStatus(HttpStatus.UNPROCESSABLE_ENTITY);
         return handleExceptionInternal(ex, body, headers, HttpStatus.UNPROCESSABLE_ENTITY, request);
-    }
-
-    @ExceptionHandler(DataConflictException.class)
-    public ResponseEntity<?> dataConflictException(DataConflictException ex, WebRequest request) {
-        log.error("DataConflictException: {}", ex.getMessage());
-        return createProblemDetailExceptionResponse(ex, HttpStatus.CONFLICT, request);
     }
 
     @ExceptionHandler(AppException.class)
