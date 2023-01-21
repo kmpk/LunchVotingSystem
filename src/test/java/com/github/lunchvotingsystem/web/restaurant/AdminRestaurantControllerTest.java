@@ -65,7 +65,7 @@ class AdminRestaurantControllerTest extends AbstractControllerTest {
     void deleteNotFound() throws Exception {
         perform(MockMvcRequestBuilders.delete(REST_URL_SLASH + NOT_FOUND))
                 .andDo(print())
-                .andExpect(status().isUnprocessableEntity());
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -93,6 +93,18 @@ class AdminRestaurantControllerTest extends AbstractControllerTest {
                 .andExpect(status().isNoContent());
 
         RESTAURANT_MATCHER.assertMatch(restaurantRepository.getExisted(RESTAURANT_1_ID), getUpdated());
+    }
+
+    @Test
+    @WithUserDetails(value = ADMIN_MAIL)
+    void updateNotFound() throws Exception {
+        Restaurant updated = getUpdated();
+        updated.setId(null);
+        perform(MockMvcRequestBuilders.put(REST_URL_SLASH + NOT_FOUND)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(updated)))
+                .andDo(print())
+                .andExpect(status().isNotFound());
     }
 
     @Test

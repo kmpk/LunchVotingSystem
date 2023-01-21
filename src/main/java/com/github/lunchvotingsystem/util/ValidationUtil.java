@@ -3,9 +3,11 @@ package com.github.lunchvotingsystem.util;
 import com.github.lunchvotingsystem.HasId;
 import com.github.lunchvotingsystem.HasLocalDate;
 import com.github.lunchvotingsystem.exception.IllegalRequestDataException;
+import com.github.lunchvotingsystem.exception.NotFoundException;
 import lombok.experimental.UtilityClass;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 @UtilityClass
 public class ValidationUtil {
@@ -33,22 +35,56 @@ public class ValidationUtil {
         }
     }
 
+    public static <T> T checkExistedStrict(T obj, int id) {
+        if (obj == null) {
+            throw new IllegalRequestDataException(getMessage(id));
+        }
+        return obj;
+    }
+
+    public static void checkExistedStrict(boolean exists, int id) {
+        if (!exists) {
+            throw new IllegalRequestDataException(getMessage(id));
+        }
+    }
+
     public static void checkModification(int count, int id) {
         if (count == 0) {
-            throw new IllegalRequestDataException("Entity with id=" + id + " not found");
+            throw new NotFoundException(getMessage(id));
+        }
+    }
+
+    public static void checkModification(int count, LocalDate date) {
+        if (count == 0) {
+            throw new NotFoundException(getMessage(date));
         }
     }
 
     public static <T> T checkExisted(T obj, int id) {
         if (obj == null) {
-            throw new IllegalRequestDataException("Entity with id=" + id + " not found");
+            throw new NotFoundException(getMessage(id));
         }
         return obj;
     }
 
+    public static <T> T checkExisted(Optional<T> obj, int id) {
+        if (obj.isEmpty()) {
+            throw new NotFoundException(getMessage(id));
+        }
+        return obj.get();
+    }
+
     public static void checkExisted(boolean exists, int id) {
         if (!exists) {
-            throw new IllegalRequestDataException("Entity with id=" + id + " not found");
+            throw new NotFoundException(getMessage(id));
         }
+    }
+
+    private static String getMessage(int id) {
+        return "Entity with id= " + id + " not found";
+    }
+
+    private static String getMessage(LocalDate date) {
+        return "Entity with date= " + date + " not found";
     }
 }

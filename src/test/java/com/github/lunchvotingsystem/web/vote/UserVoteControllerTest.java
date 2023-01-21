@@ -19,12 +19,9 @@ import static com.github.lunchvotingsystem.exception.IllegalVoteDayException.ILL
 import static com.github.lunchvotingsystem.exception.VoteChangeAfterDeadlineException.VOTE_CHANGE_AFTER_DEADLINE_EXCEPTION;
 import static com.github.lunchvotingsystem.service.VoteService.CHANGE_VOTE_TIME_RESTRICTION;
 import static com.github.lunchvotingsystem.web.restaurant.MenuTestData.TODAY;
-import static com.github.lunchvotingsystem.web.restaurant.RestaurantTestData.RESTAURANT_1_ID;
-import static com.github.lunchvotingsystem.web.restaurant.RestaurantTestData.RESTAURANT_2_ID;
 import static com.github.lunchvotingsystem.web.user.UserTestData.*;
 import static com.github.lunchvotingsystem.web.vote.UserVoteController.REST_URL;
-import static com.github.lunchvotingsystem.web.vote.UserVoteTestData.USER_VOTE;
-import static com.github.lunchvotingsystem.web.vote.UserVoteTestData.USER_YESTERDAY_VOTE;
+import static com.github.lunchvotingsystem.web.vote.UserVoteTestData.*;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -80,18 +77,33 @@ class UserVoteControllerTest extends AbstractControllerTest {
     void update() throws Exception {
         setFixedTodayClock();
         perform(MockMvcRequestBuilders.put(REST_URL_SLASH + TODAY)
-                .param("restaurantId", RESTAURANT_2_ID + ""))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(UserVoteTestData.getUpdatedVote())))
                 .andDo(print())
                 .andExpect(status().isNoContent());
-        assertEquals(UserVoteTestData.getUpdated(), service.findByDate(USER_ID, TODAY).get());
+        assertEquals(UserVoteTestData.getUpdatedVote(), service.findByDate(USER_ID, TODAY).get());
     }
 
     @Test
     void updateUnauthorized() throws Exception {
         perform(MockMvcRequestBuilders.put(REST_URL_SLASH + TODAY)
-                .param("restaurantId", RESTAURANT_1_ID + ""))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(UserVoteTestData.getUpdatedVote())))
                 .andDo(print())
                 .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @WithUserDetails(value = ADMIN_MAIL)
+    void createInvalid() throws Exception {
+        setFixedTodayClock();
+        VoteTo vote = getUpdatedVote();
+        vote.setDate(TODAY.minusDays(100));
+        perform(MockMvcRequestBuilders.put(REST_URL_SLASH + TODAY)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(vote)))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity());
     }
 
     @Test
@@ -99,7 +111,8 @@ class UserVoteControllerTest extends AbstractControllerTest {
     void updateInvalidNotToday() throws Exception {
         setFixedTodayClock();
         perform(MockMvcRequestBuilders.put(REST_URL_SLASH + TODAY.minusDays(1))
-                .param("restaurantId", RESTAURANT_1_ID + ""))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(getUpdatedYesterdayVote())))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string(containsString(ILLEGAL_VOTE_DAY_EXCEPTION)));
@@ -111,7 +124,8 @@ class UserVoteControllerTest extends AbstractControllerTest {
     void createInvalidNotToday() throws Exception {
         setFixedTodayClock();
         perform(MockMvcRequestBuilders.put(REST_URL_SLASH + TODAY.minusDays(1))
-                .param("restaurantId", RESTAURANT_1_ID + ""))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(getUpdatedYesterdayVote())))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string(containsString(ILLEGAL_VOTE_DAY_EXCEPTION)));
@@ -123,7 +137,8 @@ class UserVoteControllerTest extends AbstractControllerTest {
     void updateInvalidAfterDeadline() throws Exception {
         setFixedTodayClockAfterDeadline();
         perform(MockMvcRequestBuilders.put(REST_URL_SLASH + TODAY)
-                .param("restaurantId", RESTAURANT_1_ID + ""))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(UserVoteTestData.getUpdatedVote())))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string(containsString(VOTE_CHANGE_AFTER_DEADLINE_EXCEPTION)));
@@ -131,10 +146,11 @@ class UserVoteControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(value = USER_MAIL)
-    void updateInvalid() throws Exception {
+    void updateNotFound() throws Exception {
         setFixedTodayClock();
         perform(MockMvcRequestBuilders.put(REST_URL_SLASH + TODAY)
-                .param("restaurantId", NOT_FOUND + ""))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(UserVoteTestData.getNotFound())))
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity());
     }

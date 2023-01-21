@@ -2,7 +2,6 @@ package com.github.lunchvotingsystem.web.restaurant;
 
 import com.github.lunchvotingsystem.service.MenuService;
 import com.github.lunchvotingsystem.to.MenuTo;
-import com.github.lunchvotingsystem.util.ValidationUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -18,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 
+import static com.github.lunchvotingsystem.util.ValidationUtil.assureDateConsistent;
 import static com.github.lunchvotingsystem.web.restaurant.AdminMenuController.REST_URL;
 
 @RestController
@@ -44,7 +44,7 @@ public class AdminMenuController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @CacheEvict(value = "restMenu", key = "#date")
     @Operation(summary = "delete restaurant menu of the day for provided date")
-    @ApiResponse(responseCode = "422", content = @Content(schema = @Schema(hidden = true)))
+    @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(hidden = true)))
     public void delete(@PathVariable int id, @PathVariable LocalDate date) {
         log.info("delete {} of {}", date, id);
         service.deleteExisted(id, date);
@@ -55,9 +55,10 @@ public class AdminMenuController {
     @CacheEvict(value = "restMenu", key = "#date")
     @Operation(summary = "create or update restaurant menu of the day for provided date")
     @ApiResponse(responseCode = "422", content = @Content(schema = @Schema(hidden = true)))
+    @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(hidden = true)))
     public void update(@Valid @RequestBody MenuTo menu, @PathVariable int id, @PathVariable LocalDate date) {
         log.info("update {} with id={}", menu, id);
-        ValidationUtil.assureDateConsistent(menu, date);
+        assureDateConsistent(menu, date);
         service.update(id, menu);
     }
 }

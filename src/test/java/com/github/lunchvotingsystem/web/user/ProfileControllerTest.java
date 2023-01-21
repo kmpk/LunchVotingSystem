@@ -60,6 +60,7 @@ class ProfileControllerTest extends AbstractControllerTest {
         USER_MATCHER.assertMatch(userRepository.getExisted(USER_ID), UsersUtil.updateFromTo(new User(user), updatedTo));
     }
 
+
     @Test
     @WithUserDetails(value = USER_MAIL)
     void updateInvalid() throws Exception {

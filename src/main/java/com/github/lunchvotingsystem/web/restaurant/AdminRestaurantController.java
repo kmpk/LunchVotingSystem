@@ -47,7 +47,7 @@ public class AdminRestaurantController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @CacheEvict(value = {"restMenu", "voteCounts"}, allEntries = true)
     @Operation(summary = "delete restaurant")
-    @ApiResponse(responseCode = "422", content = @Content(schema = @Schema(hidden = true)))
+    @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(hidden = true)))
     public void delete(@PathVariable int id) {
         log.info("delete {}", id);
         repository.deleteExisted(id);
@@ -81,6 +81,7 @@ public class AdminRestaurantController {
     @CacheEvict(value = "restMenu", allEntries = true)
     @Operation(summary = "update restaurant info")
     @ApiResponse(responseCode = "422", content = @Content(schema = @Schema(hidden = true)))
+    @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(hidden = true)))
     public void update(@Valid @RequestBody Restaurant restaurant, @PathVariable int id) {
         log.info("update {} with id={}", restaurant, id);
         assureIdConsistent(restaurant, id);

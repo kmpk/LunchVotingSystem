@@ -8,13 +8,14 @@ import com.github.lunchvotingsystem.repository.RestaurantRepository;
 import com.github.lunchvotingsystem.repository.UserRepository;
 import com.github.lunchvotingsystem.repository.VoteRepository;
 import com.github.lunchvotingsystem.to.VoteTo;
-import com.github.lunchvotingsystem.util.ValidationUtil;
 import com.github.lunchvotingsystem.util.VotesUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.*;
 import java.util.Optional;
+
+import static com.github.lunchvotingsystem.util.ValidationUtil.checkExistedStrict;
 
 @Service
 public class VoteService {
@@ -40,10 +41,12 @@ public class VoteService {
     }
 
     @Transactional
-    public void update(int userId, LocalDate date, int restaurantId) {
+    public void update(int userId, VoteTo vote) {
+        LocalDate date = vote.getDate();
         checkVoteDay(date);
-        ValidationUtil.checkExisted(restaurantRepository.existsById(restaurantId), restaurantId);
-        User user = ValidationUtil.checkExisted(userRepository.getReferenceById(userId), userId);
+        int restaurantId = vote.getRestaurantId();
+        checkExistedStrict(restaurantRepository.existsById(restaurantId), restaurantId);
+        User user = checkExistedStrict(userRepository.getReferenceById(userId), userId);
         Optional<Vote> voteOptional = voteRepository.findByUserIdAndDate(userId, date);
         Vote newVote = new Vote(user, restaurantRepository.getReferenceById(restaurantId), date);
         voteOptional.ifPresent(v -> {

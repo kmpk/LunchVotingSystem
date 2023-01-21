@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
@@ -17,6 +18,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+
+import static com.github.lunchvotingsystem.util.ValidationUtil.assureDateConsistent;
 
 @RestController
 @RequestMapping(value = UserVoteController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -37,14 +40,15 @@ public class UserVoteController {
         return ResponseEntity.of(service.findByDate(userId, date));
     }
 
-    @PutMapping(value = "/{date}")
+    @PutMapping(value = "/{date}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @CacheEvict(value = "voteCounts", key = "#date")
     @Operation(summary = "set user vote for restaurant at provided date")
     @ApiResponse(responseCode = "400", description = "Cannot vote not for today or change vote after deadline", content = @Content(schema = @Schema(hidden = true)))
     @ApiResponse(responseCode = "422", content = @Content(schema = @Schema(hidden = true)))
-    public void update(@PathVariable LocalDate date, @RequestParam int restaurantId, @AuthenticationPrincipal AuthUser authUser) {
-        log.info("update {} with {}", date, restaurantId);
-        service.update(authUser.id(), date, restaurantId);
+    public void update(@PathVariable LocalDate date, @RequestBody @Valid VoteTo vote, @AuthenticationPrincipal AuthUser authUser) {
+        log.info("update {} with {}", date, vote.getRestaurantId());
+        assureDateConsistent(vote, date);
+        service.update(authUser.id(), vote);
     }
 }

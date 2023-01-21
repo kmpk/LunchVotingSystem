@@ -85,13 +85,16 @@ class AdminMenuControllerTest extends AbstractControllerTest {
     void deleteNotFound() throws Exception {
         perform(MockMvcRequestBuilders.delete(REST_URL_SLASH + RESTAURANT_3_ID + SUB_PATH + TODAY))
                 .andDo(print())
-                .andExpect(status().isUnprocessableEntity());
+                .andExpect(status().isNotFound());
         perform(MockMvcRequestBuilders.delete(REST_URL_SLASH + RESTAURANT_1_ID + SUB_PATH + TODAY.plusDays(1)))
                 .andDo(print())
-                .andExpect(status().isUnprocessableEntity());
+                .andExpect(status().isNotFound());
         perform(MockMvcRequestBuilders.delete(REST_URL_SLASH + RESTAURANT_1_ID + SUB_PATH + TODAY.minusDays(2)))
                 .andDo(print())
-                .andExpect(status().isUnprocessableEntity());
+                .andExpect(status().isNotFound());
+        perform(MockMvcRequestBuilders.delete(REST_URL_SLASH + NOT_FOUND + SUB_PATH + TODAY))
+                .andDo(print())
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -129,7 +132,7 @@ class AdminMenuControllerTest extends AbstractControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updatedMenu)))
                 .andDo(print())
-                .andExpect(status().isUnprocessableEntity());
+                .andExpect(status().isNotFound());
     }
 
     @Test

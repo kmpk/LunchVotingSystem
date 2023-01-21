@@ -18,8 +18,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
 
-import static com.github.lunchvotingsystem.util.ValidationUtil.assureIdConsistent;
-import static com.github.lunchvotingsystem.util.ValidationUtil.checkNew;
+import static com.github.lunchvotingsystem.util.ValidationUtil.*;
 
 @RestController
 @RequestMapping(value = AdminUserController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -43,7 +42,7 @@ public class AdminUserController extends AbstractUserController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @CacheEvict(value = "users", allEntries = true)
     @Operation(summary = "delete user")
-    @ApiResponse(responseCode = "422", content = @Content(schema = @Schema(hidden = true)))
+    @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(hidden = true)))
     public void delete(@PathVariable int id) {
         super.delete(id);
     }
@@ -75,10 +74,12 @@ public class AdminUserController extends AbstractUserController {
     @CacheEvict(value = "users", key = "#user.email")
     @Operation(summary = "update user info")
     @ApiResponse(responseCode = "422", content = @Content(schema = @Schema(hidden = true)))
+    @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(hidden = true)))
     public void update(@Valid @RequestBody User user, @PathVariable int id) {
         log.info("update {} with id={}", user, id);
         checkModificationRestriction(id);
         assureIdConsistent(user, id);
+        checkExisted(repository.findById(id), id);
         prepareAndSave(user);
     }
 
@@ -94,7 +95,7 @@ public class AdminUserController extends AbstractUserController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Transactional
     @Operation(summary = "set if user is enabled")
-    @ApiResponse(responseCode = "422", content = @Content(schema = @Schema(hidden = true)))
+    @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(hidden = true)))
     public void enable(@PathVariable int id, @RequestParam boolean enabled) {
         log.info(enabled ? "enable {}" : "disable {}", id);
         checkModificationRestriction(id);

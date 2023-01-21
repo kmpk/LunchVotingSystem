@@ -79,7 +79,7 @@ class AdminUserControllerTest extends AbstractControllerTest {
     void deleteNotFound() throws Exception {
         perform(MockMvcRequestBuilders.delete(REST_URL_SLASH + NOT_FOUND))
                 .andDo(print())
-                .andExpect(status().isUnprocessableEntity());
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -89,7 +89,7 @@ class AdminUserControllerTest extends AbstractControllerTest {
                 .param("enabled", "false")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().isUnprocessableEntity());
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -117,6 +117,19 @@ class AdminUserControllerTest extends AbstractControllerTest {
                 .andExpect(status().isNoContent());
 
         USER_MATCHER.assertMatch(userRepository.getExisted(USER_ID), getUpdated());
+    }
+
+    @Test
+    @WithUserDetails(value = ADMIN_MAIL)
+    void updateNotFound() throws Exception {
+        User updated = getUpdated();
+        updated.setId(null);
+        updated.setEmail("new@email.com");
+        perform(MockMvcRequestBuilders.put(REST_URL_SLASH + NOT_FOUND)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonWithPassword(updated, "newPass")))
+                .andDo(print())
+                .andExpect(status().isNotFound());
     }
 
     @Test
