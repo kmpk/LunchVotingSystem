@@ -42,6 +42,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(ex, body, headers, HttpStatus.UNPROCESSABLE_ENTITY, request);
     }
 
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<?> unexpectedException(Exception ex, WebRequest request) {
+        log.error("Unexpected exception: {}", ex.getMessage());
+        return createProblemDetailExceptionResponse(ex, HttpStatus.INTERNAL_SERVER_ERROR, request);
+    }
+
     @ExceptionHandler(AppException.class)
     public ResponseEntity<?> appException(AppException ex, WebRequest request) {
         log.error("ApplicationException: {}", ex.getMessage());
