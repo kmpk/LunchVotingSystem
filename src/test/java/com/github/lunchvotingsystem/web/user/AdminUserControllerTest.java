@@ -60,6 +60,13 @@ class AdminUserControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
+    void getByEmailNotFound() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL_SLASH + "by-email?email=" + "not@user.net"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @WithUserDetails(value = ADMIN_MAIL)
     void delete() throws Exception {
         perform(MockMvcRequestBuilders.delete(REST_URL_SLASH + USER_ID))
                 .andDo(print())

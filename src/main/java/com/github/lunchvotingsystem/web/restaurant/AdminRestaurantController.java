@@ -3,6 +3,9 @@ package com.github.lunchvotingsystem.web.restaurant;
 import com.github.lunchvotingsystem.model.Restaurant;
 import com.github.lunchvotingsystem.repository.RestaurantRepository;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,28 +27,34 @@ import static com.github.lunchvotingsystem.util.ValidationUtil.*;
 @RequestMapping(value = AdminRestaurantController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
 @AllArgsConstructor
+@ApiResponse(responseCode = "401", content = @Content(schema = @Schema(hidden = true)))
+@ApiResponse(responseCode = "403", content = @Content(schema = @Schema(hidden = true)))
 public class AdminRestaurantController {
     static final String REST_URL = "/api/admin/restaurants";
 
     private final RestaurantRepository repository;
 
     @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "get restaurant info")
+    @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(hidden = true)))
     public ResponseEntity<Restaurant> get(@PathVariable int id) {
         log.info("get {}", id);
         return ResponseEntity.of(repository.findById(id));
     }
 
     @DeleteMapping("/{id}")
-    @Operation(summary = "delete restaurant")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @CacheEvict(value = {"restMenu", "voteCounts"}, allEntries = true)
+    @Operation(summary = "delete restaurant")
+    @ApiResponse(responseCode = "422", content = @Content(schema = @Schema(hidden = true)))
     public void delete(@PathVariable int id) {
         log.info("delete {}", id);
         repository.deleteExisted(id);
     }
 
     @GetMapping
+    @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "get all restaurants")
     public List<Restaurant> getAll() {
         log.info("getAll");
@@ -53,7 +62,9 @@ public class AdminRestaurantController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "create new restaurant")
+    @ApiResponse(responseCode = "422", content = @Content(schema = @Schema(hidden = true)))
     public ResponseEntity<Restaurant> createWithLocation(@Valid @RequestBody Restaurant restaurant) {
         log.info("create {}", restaurant);
         checkNew(restaurant);
@@ -65,10 +76,11 @@ public class AdminRestaurantController {
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    @Operation(summary = "update restaurant info")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Transactional
     @CacheEvict(value = "restMenu", allEntries = true)
+    @Operation(summary = "update restaurant info")
+    @ApiResponse(responseCode = "422", content = @Content(schema = @Schema(hidden = true)))
     public void update(@Valid @RequestBody Restaurant restaurant, @PathVariable int id) {
         log.info("update {} with id={}", restaurant, id);
         assureIdConsistent(restaurant, id);
