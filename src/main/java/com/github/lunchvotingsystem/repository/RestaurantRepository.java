@@ -10,10 +10,10 @@ import java.util.List;
 public interface RestaurantRepository extends BaseRepository<Restaurant> {
 
     @Query(value = """
-            SELECT RESTAURANT_ID AS id,RESTAURANT.NAME AS restaurantName, ADDRESS AS address,
-             MENU_DATE AS menuDate, D.ID AS dishId, D.NAME AS dishName,D.COST AS cost
-            FROM RESTAURANT INNER JOIN DISH D on RESTAURANT.ID = D.RESTAURANT_ID
-            WHERE MENU_DATE = :date
+            SELECT restaurant_id AS id, restaurant.name AS restaurantName, address,
+             menu_date AS menuDate, d.id AS dishId, d.name AS dishName, cost
+            FROM restaurant INNER JOIN dish d on restaurant.id = d.restaurant_id
+            WHERE menu_date = :date
             ORDER BY id
             """, nativeQuery = true)
     List<Tuple> getWithTodayDishes(LocalDate date);

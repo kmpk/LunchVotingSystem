@@ -1,6 +1,7 @@
 package com.github.lunchvotingsystem.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -8,7 +9,9 @@ import org.hibernate.annotations.OnDeleteAction;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "vote", uniqueConstraints = @UniqueConstraint(name = "uk_vote_user_date", columnNames = {"user_id", "date"}))
+@Table(name = "vote",
+        uniqueConstraints = @UniqueConstraint(name = "uk_vote_user_date", columnNames = {"user_id", "date"}),
+        indexes = @Index(name = "ix_vote_restaurant_date", columnList = "restaurant_id, date"))
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -24,6 +27,8 @@ public class Vote extends BaseEntity {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Restaurant restaurant;
 
+    @Column(name = "date", nullable = false)
+    @NotNull
     private LocalDate date;
 
     public Vote(User user, Restaurant restaurant, LocalDate date) {

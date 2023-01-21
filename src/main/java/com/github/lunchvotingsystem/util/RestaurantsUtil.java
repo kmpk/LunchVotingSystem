@@ -20,8 +20,8 @@ public class RestaurantsUtil {
             Integer id = t.get("id", Integer.class);
             String restaurantName = t.get("restaurantname", String.class);
             String address = t.get("address", String.class);
-            LocalDate menudate = t.get("menudate", Date.class).toLocalDate();
-            RestaurantMenuTo restaurant = tos.computeIfAbsent(id, i -> new RestaurantMenuTo(i, restaurantName, address, menudate, new ArrayList<>()));
+            LocalDate menuDate = t.get("menudate", Date.class).toLocalDate();
+            RestaurantMenuTo restaurant = tos.computeIfAbsent(id, i -> new RestaurantMenuTo(i, restaurantName, address, menuDate, new ArrayList<>()));
             restaurant.addDish(new DishTo(t.get("dishname", String.class), t.get("cost", Long.class)));
         }
         return List.copyOf(tos.values());

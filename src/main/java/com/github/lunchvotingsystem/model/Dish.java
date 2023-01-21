@@ -8,7 +8,10 @@ import org.hibernate.validator.constraints.Range;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "dish", uniqueConstraints = @UniqueConstraint(name = Dish.DISH_NAME_MENU_DATE_RESTAURANT_CONSTRAINT, columnNames = {"name", "menu_date", "restaurant_id"}))
+@Table(name = "dish",
+        uniqueConstraints = @UniqueConstraint(name = Dish.DISH_NAME_MENU_DATE_RESTAURANT_CONSTRAINT,
+                columnNames = {"name", "menu_date", "restaurant_id"}),
+        indexes = @Index(name = "ix_dish_restaurant_menu_date", columnList = "restaurant_id, menu_date"))
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
