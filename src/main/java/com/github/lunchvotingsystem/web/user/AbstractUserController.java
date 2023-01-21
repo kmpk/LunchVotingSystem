@@ -19,7 +19,7 @@ public abstract class AbstractUserController {
 
     @Autowired
     @SuppressWarnings("deprecation")
-    public void setEnvironment(Environment environment) {
+    public void setModificationRestrictionFlag(Environment environment) {
         this.modificationRestriction = environment.acceptsProfiles("VDS");
     }
 

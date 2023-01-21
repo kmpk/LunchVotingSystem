@@ -57,6 +57,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests()
                 .requestMatchers("/api/admin/**").hasRole(Role.ADMIN.name())
+                .requestMatchers("/api/profile").authenticated()
                 .requestMatchers(HttpMethod.POST, "/api/register").anonymous()
                 .requestMatchers("/api/**").hasRole(Role.USER.name())
                 .and().httpBasic()

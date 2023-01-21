@@ -1,5 +1,6 @@
 package com.github.lunchvotingsystem.util;
 
+import com.github.lunchvotingsystem.model.Role;
 import com.github.lunchvotingsystem.model.User;
 import com.github.lunchvotingsystem.to.UserTo;
 import lombok.experimental.UtilityClass;
@@ -10,6 +11,10 @@ import static com.github.lunchvotingsystem.config.SecurityConfig.PASSWORD_ENCODE
 public class UsersUtil {
     public static User createNewFromTo(UserTo userTo) {
         return new User(null, userTo.getName(), userTo.getEmail().toLowerCase(), userTo.getPassword());
+    }
+
+    public static User createNewFromToWithUserRole(UserTo userTo) {
+        return new User(null, userTo.getName(), userTo.getEmail().toLowerCase(), userTo.getPassword(), Role.USER);
     }
 
     public static User updateFromTo(User user, UserTo userTo) {
