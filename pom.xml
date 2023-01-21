@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.github</groupId>
     <artifactId>lunch-voting-system</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>LunchVotingSystem</name>
     <description>A voting system for deciding where to have lunch</description>
     <properties>

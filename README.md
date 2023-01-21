@@ -4,19 +4,22 @@ Voting system for deciding where to have lunch.
 
 [remote REST API documentation](http://62.113.255.104:8889/open-api)
 
-` Note - remote application time zone is UTC+3 and all data is reset daily at midnight`
+` Note - remote application time zone is GMT+3 and all data is reset daily at midnight`
+
+By default, users after registration has no USER role, activate "REGISTER_ROLE_SET" profile to set role during
+registration.
+To restrict modification of initially created users, activate "VDS" profile.
 
 <details>
 	<summary> API overview </summary>
 
 ### Guest
 
-POST `http://localhost:8889/api/register` - register new user. After registration admin must give new user "USER" role,
-otherwise that user will be unable to call any API endpoints
+#### Registration
 
-### User
-
-All user endpoints requires USER role
+POST `http://localhost:8889/api/register` - register new user. Depending on current app profile after registration new
+user may not have USER role set, that user will be unable to use any non-profile API endpoints without manually setting
+role by admin
 
 #### Profile
 
@@ -25,6 +28,10 @@ GET `http://localhost:8889/api/profile` - get logged user info
 PUT `http://localhost:8889/api/profile` - update logged user info
 
 DELETE `http://localhost:8889/api/profile` - delete logged user
+
+### User
+
+All user endpoints requires USER role
 
 #### Restaurants
 
@@ -86,8 +93,10 @@ JDK 17, Spring Boot 3.0, Lombok, H2, Caffeine Cache, Swagger/OpenAPI 3.0
 
 Requirements: JDK 17+ , Maven
 
-- Run from maven: `mvn spring-boot:run` in project root directory.
-- Build and run: `mvn package` in project root directory and then `java -jar ./target/VotingSystem.jar`
+- Run from maven: `mvn spring-boot:run` in project root directory. With
+  profiles: `mvn spring-boot:run -Dspring-boot.run.profiles=VDS,REGISTER_ROLE_SET`
+- Build and run: `mvn package` in project root directory and then `java -jar ./target/VotingSystem.jar`,
+  or `java -Dspring-boot.run.profiles=VDS,REGISTER_ROLE_SET ./target/VotingSystem.jar`
 
 ## Original task ##
 
