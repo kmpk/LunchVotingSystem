@@ -1,7 +1,6 @@
 package com.github.lunchvotingsystem.util;
 
 import com.github.lunchvotingsystem.HasId;
-import com.github.lunchvotingsystem.HasLocalDate;
 import com.github.lunchvotingsystem.exception.IllegalRequestDataException;
 import com.github.lunchvotingsystem.exception.NotFoundException;
 import lombok.experimental.UtilityClass;
@@ -24,14 +23,6 @@ public class ValidationUtil {
             bean.setId(id);
         } else if (bean.id() != id) {
             throw new IllegalRequestDataException(bean.getClass().getSimpleName() + " must has id=" + id);
-        }
-    }
-
-    public static void assureDateConsistent(HasLocalDate bean, LocalDate date) {
-        if (!bean.isDateSet()) {
-            bean.setDate(date);
-        } else if (!bean.getDate().equals(date)) {
-            throw new IllegalRequestDataException(bean.getClass().getSimpleName() + " must has date=" + date);
         }
     }
 

@@ -1,22 +1,19 @@
 package com.github.lunchvotingsystem.to;
 
-import com.github.lunchvotingsystem.HasLocalDate;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.Builder;
+import lombok.Value;
+import lombok.extern.jackson.Jacksonized;
 
-import java.time.LocalDate;
 import java.util.List;
 
-@Data
+@Value
+@Builder
+@Jacksonized
 @AllArgsConstructor
-@ToString
-@EqualsAndHashCode
-public class MenuTo implements HasLocalDate {
-    LocalDate date;
+public class MenuTo {
     @NotEmpty
     List<@Valid DishTo> dishes;
 }

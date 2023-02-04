@@ -120,7 +120,7 @@ class AdminMenuControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isNoContent());
 
-        List<Dish> expected = MenusUtil.dishFromTos(updatedMenu.getDishes(), updatedMenu.getDate());
+        List<Dish> expected = MenusUtil.dishFromTos(updatedMenu.getDishes(), TODAY);
         DISH_MATCHER.assertMatch(dishRepository.getAllByRestaurantIdAndMenuDate(RESTAURANT_1_ID, TODAY), expected);
     }
 

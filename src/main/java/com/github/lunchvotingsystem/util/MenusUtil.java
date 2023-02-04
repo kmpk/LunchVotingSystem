@@ -14,8 +14,8 @@ import java.util.function.Function;
 @UtilityClass
 public class MenusUtil {
 
-    public static MenuTo createMenu(LocalDate date, Collection<Dish> dishes) {
-        return new MenuTo(date, dishes.stream().map(MenusUtil::toFromDish).toList());
+    public static MenuTo createMenu(Collection<Dish> dishes) {
+        return new MenuTo(dishes.stream().map(MenusUtil::toFromDish).toList());
     }
 
     public static List<Dish> prepareToSave(List<DishTo> tos, LocalDate date, Restaurant restaurant) {

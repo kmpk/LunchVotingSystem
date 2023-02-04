@@ -30,7 +30,7 @@ public class MenuService {
         if (dishes.isEmpty()) {
             return Optional.empty();
         }
-        return Optional.of(MenusUtil.createMenu(date, dishes));
+        return Optional.of(MenusUtil.createMenu(dishes));
     }
 
     public void deleteExisted(int restaurantId, LocalDate date) {
@@ -38,9 +38,9 @@ public class MenuService {
         checkModification(dishRepository.deleteByRestaurantIdAndMenuDate(restaurantId, date), date);
     }
 
-    public void update(int restaurantId, MenuTo menu) {
+    public void update(int restaurantId, LocalDate date, MenuTo menu) {
         Restaurant restaurant = checkExisted(restaurantRepository.findById(restaurantId), restaurantId);
-        dishRepository.deleteByRestaurantIdAndMenuDate(restaurantId, menu.getDate());
-        dishRepository.saveAll(MenusUtil.prepareToSave(menu.getDishes(), menu.getDate(), restaurant));
+        dishRepository.deleteByRestaurantIdAndMenuDate(restaurantId, date);
+        dishRepository.saveAll(MenusUtil.prepareToSave(menu.getDishes(), date, restaurant));
     }
 }

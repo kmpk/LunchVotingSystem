@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 
-import static com.github.lunchvotingsystem.util.ValidationUtil.assureDateConsistent;
 import static com.github.lunchvotingsystem.web.restaurant.AdminMenuController.REST_URL;
 
 @RestController
@@ -58,7 +57,6 @@ public class AdminMenuController {
     @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(hidden = true)))
     public void update(@Valid @RequestBody MenuTo menu, @PathVariable int id, @PathVariable LocalDate date) {
         log.info("update {} with id={}", menu, id);
-        assureDateConsistent(menu, date);
-        service.update(id, menu);
+        service.update(id, date, menu);
     }
 }
