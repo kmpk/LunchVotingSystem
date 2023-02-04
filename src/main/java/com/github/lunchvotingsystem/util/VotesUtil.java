@@ -7,6 +7,6 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class VotesUtil {
     public static VoteTo getToFromVote(Vote vote) {
-        return new VoteTo(vote.getDate(), vote.getRestaurant().getId());
+        return new VoteTo(vote.getRestaurant().getId());
     }
 }

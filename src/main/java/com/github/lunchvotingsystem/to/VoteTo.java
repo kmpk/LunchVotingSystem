@@ -1,20 +1,16 @@
 package com.github.lunchvotingsystem.to;
 
-import com.github.lunchvotingsystem.HasLocalDate;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.Builder;
+import lombok.Value;
+import lombok.extern.jackson.Jacksonized;
 
-import java.time.LocalDate;
-
-@Data
+@Value
+@Builder
+@Jacksonized
 @AllArgsConstructor
-@ToString
-@EqualsAndHashCode
-public class VoteTo implements HasLocalDate {
-    private LocalDate date;
+public class VoteTo {
     @NotNull
-    private int restaurantId;
+    int restaurantId;
 }

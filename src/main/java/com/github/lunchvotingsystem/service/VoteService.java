@@ -41,10 +41,8 @@ public class VoteService {
     }
 
     @Transactional
-    public void update(int userId, VoteTo vote) {
-        LocalDate date = vote.getDate();
+    public void update(int userId, int restaurantId, LocalDate date) {
         checkVoteDay(date);
-        int restaurantId = vote.getRestaurantId();
         checkExistedStrict(restaurantRepository.existsById(restaurantId), restaurantId);
         User user = checkExistedStrict(userRepository.getReferenceById(userId), userId);
         Optional<Vote> voteOptional = voteRepository.findByUserIdAndDate(userId, date);

@@ -19,8 +19,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 
-import static com.github.lunchvotingsystem.util.ValidationUtil.assureDateConsistent;
-
 @RestController
 @RequestMapping(value = UserVoteController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
@@ -48,7 +46,6 @@ public class UserVoteController {
     @ApiResponse(responseCode = "422", content = @Content(schema = @Schema(hidden = true)))
     public void update(@PathVariable LocalDate date, @RequestBody @Valid VoteTo vote, @AuthenticationPrincipal AuthUser authUser) {
         log.info("update {} with {}", date, vote.getRestaurantId());
-        assureDateConsistent(vote, date);
-        service.update(authUser.id(), vote);
+        service.update(authUser.id(), vote.getRestaurantId(), date);
     }
 }
