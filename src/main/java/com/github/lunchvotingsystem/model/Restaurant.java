@@ -12,14 +12,13 @@ import org.hibernate.annotations.OnDeleteAction;
 import java.util.List;
 
 @Entity
-@Table(name = "restaurant", uniqueConstraints = @UniqueConstraint(name = Restaurant.RESTAURANT_ADDRESS_CONSTRAINT, columnNames = {"address"}))
+@Table(name = "restaurant", uniqueConstraints = @UniqueConstraint(name = Restaurant.RESTAURANT_NAME_ADDRESS_CONSTRAINT, columnNames = {"name", "address"}))
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString(callSuper = true, exclude = {"dishes"})
+@ToString(callSuper = true)
 public class Restaurant extends NamedEntity {
-    public static final String RESTAURANT_ADDRESS_CONSTRAINT = "uk_restaurant_address";
-    public static final String RESTAURANT_DUPLICATE_ADDRESS_EXCEPTION = "Restaurant with this address already exists";
+    public static final String RESTAURANT_NAME_ADDRESS_CONSTRAINT = "uk_restaurant_name_address";
 
     @NotBlank
     @Size(min = 2, max = 128)
@@ -30,7 +29,8 @@ public class Restaurant extends NamedEntity {
     @OneToMany(mappedBy = "restaurant")
     @OnDelete(action = OnDeleteAction.CASCADE) //https://stackoverflow.com/a/44988100/548473
     @JsonIgnore
-    List<Dish> dishes;
+    @ToString.Exclude
+    private List<Dish> dishes;
 
     public Restaurant(Integer id, String name, String address) {
         super(id, name);

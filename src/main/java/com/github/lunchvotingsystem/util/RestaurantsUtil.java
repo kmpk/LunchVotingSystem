@@ -8,14 +8,14 @@ import lombok.experimental.UtilityClass;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @UtilityClass
 public class RestaurantsUtil {
     public static List<RestaurantMenuTo> parseTuples(List<Tuple> tuples) {
-        Map<Integer, RestaurantMenuTo> tos = new LinkedHashMap<>();
+        Map<Integer, RestaurantMenuTo> tos = new HashMap<>();
         for (Tuple t : tuples) {
             Integer id = t.get("id", Integer.class);
             String restaurantName = t.get("restaurantname", String.class);

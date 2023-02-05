@@ -1,6 +1,8 @@
 package com.github.lunchvotingsystem;
 
 import com.github.lunchvotingsystem.exception.AppException;
+import com.github.lunchvotingsystem.model.Dish;
+import com.github.lunchvotingsystem.model.Restaurant;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -17,18 +19,17 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static com.github.lunchvotingsystem.model.Dish.DISH_DUPLICATE_NAME_EXCEPTION;
-import static com.github.lunchvotingsystem.model.Dish.DISH_NAME_MENU_DATE_RESTAURANT_CONSTRAINT;
-import static com.github.lunchvotingsystem.model.Restaurant.RESTAURANT_ADDRESS_CONSTRAINT;
-import static com.github.lunchvotingsystem.model.Restaurant.RESTAURANT_DUPLICATE_ADDRESS_EXCEPTION;
-
 @RestControllerAdvice
 @AllArgsConstructor
 @Slf4j
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
+    public static final String RESTAURANT_DUPLICATE_ADDRESS_EXCEPTION = "Restaurant with this name and address already exists";
+    public static final String DISH_DUPLICATE_NAME_EXCEPTION = "Duplicate dish names";
+
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+        log.error("Method argument nod valid: {}", ex.getMessage());
         ProblemDetail body = ex.updateAndGetBody(null, LocaleContextHolder.getLocale());
         Map<String, String> invalidParams = new LinkedHashMap<>();
         for (ObjectError error : ex.getBindingResult().getGlobalErrors()) {
@@ -57,10 +58,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<?> dataIntegrityViolationException(DataIntegrityViolationException ex, WebRequest request) {
         log.error("DataIntegrityViolationException: {}", ex.getMessage());
-        if (ex.getMessage().contains(RESTAURANT_ADDRESS_CONSTRAINT.toUpperCase())) {
+        if (ex.getMessage().contains(Restaurant.RESTAURANT_NAME_ADDRESS_CONSTRAINT.toUpperCase())) {
             return createCustomDataIntegrityViolationResponse(ex, request, "address", RESTAURANT_DUPLICATE_ADDRESS_EXCEPTION);
         }
-        if (ex.getMessage().contains(DISH_NAME_MENU_DATE_RESTAURANT_CONSTRAINT.toUpperCase())) {
+        if (ex.getMessage().contains(Dish.DISH_NAME_MENU_DATE_RESTAURANT_CONSTRAINT.toUpperCase())) {
             return createCustomDataIntegrityViolationResponse(ex, request, "name", DISH_DUPLICATE_NAME_EXCEPTION);
         }
         return createProblemDetailExceptionResponse(ex, HttpStatus.UNPROCESSABLE_ENTITY, request);

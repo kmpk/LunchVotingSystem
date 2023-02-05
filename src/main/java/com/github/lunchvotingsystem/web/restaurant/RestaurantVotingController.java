@@ -35,7 +35,7 @@ public class RestaurantVotingController {
     public List<VoteCountTo> get(@PathVariable LocalDate date) {
         log.info("get {}", date);
         return repository.countVotesByDate(date).stream()
-                .map(vcp -> new VoteCountTo(vcp.getRestaurantId(), vcp.getCount()))
+                .map(vcp -> new VoteCountTo(vcp.getRestaurantId(), vcp.getVotesCount()))
                 .toList();
     }
 }

@@ -13,7 +13,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.github.lunchvotingsystem.model.Restaurant.RESTAURANT_DUPLICATE_ADDRESS_EXCEPTION;
+import static com.github.lunchvotingsystem.GlobalExceptionHandler.RESTAURANT_DUPLICATE_ADDRESS_EXCEPTION;
 import static com.github.lunchvotingsystem.util.validation.NoHtml.EXCEPTION_NO_HTML;
 import static com.github.lunchvotingsystem.web.restaurant.AdminRestaurantController.REST_URL;
 import static com.github.lunchvotingsystem.web.restaurant.RestaurantTestData.*;
@@ -176,6 +176,7 @@ class AdminRestaurantControllerTest extends AbstractControllerTest {
     void updateDuplicateAddress() throws Exception {
         Restaurant updated = new Restaurant(restaurant1);
         updated.setAddress(restaurant2.getAddress());
+        updated.setName(restaurant2.getName());
         perform(MockMvcRequestBuilders.put(REST_URL_SLASH + RESTAURANT_1_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updated)))
@@ -190,6 +191,7 @@ class AdminRestaurantControllerTest extends AbstractControllerTest {
     void createDuplicateAddress() throws Exception {
         Restaurant newRestaurant = getNew();
         newRestaurant.setAddress(restaurant1.getAddress());
+        newRestaurant.setName(restaurant1.getName());
         perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(newRestaurant)))

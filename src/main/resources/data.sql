@@ -22,7 +22,7 @@ VALUES (1, CURRENT_DATE, 'Restaurant 1 dish 1', 10000),
        (1, DATEADD('DAY', -1, CURRENT_DATE), 'Restaurant 1 yesterday dish 1', 70000),
        (1, DATEADD('DAY', -1, CURRENT_DATE), 'Restaurant 1 yesterday dish 2', 80000);
 
-INSERT INTO VOTE(DATE, RESTAURANT_ID, USER_ID)
+INSERT INTO VOTE(VOTE_DATE, RESTAURANT_ID, USER_ID)
 VALUES (CURRENT_DATE, 1, 1),
        (CURRENT_DATE, 2, 2),
        (DATEADD('DAY', -1, CURRENT_DATE), 2, 1);

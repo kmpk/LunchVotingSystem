@@ -10,24 +10,26 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name = "vote",
-        uniqueConstraints = @UniqueConstraint(name = "uk_vote_user_date", columnNames = {"user_id", "date"}),
-        indexes = @Index(name = "ix_vote_restaurant_date", columnList = "restaurant_id, date"))
+        uniqueConstraints = @UniqueConstraint(name = "uk_vote_user_date", columnNames = {"user_id", "vote_date"}),
+        indexes = @Index(name = "ix_vote_restaurant_date", columnList = "restaurant_id, vote_date"))
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString(callSuper = true, exclude = {"restaurant", "user"})
+@ToString(callSuper = true)
 public class Vote extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @ToString.Exclude
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @ToString.Exclude
     private Restaurant restaurant;
 
-    @Column(name = "date", nullable = false)
+    @Column(name = "vote_date", nullable = false)
     @NotNull
     private LocalDate date;
 

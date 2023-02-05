@@ -15,22 +15,22 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString(callSuper = true, exclude = {"restaurant"})
+@ToString(callSuper = true)
 public class Dish extends NamedEntity {
     public static final String DISH_NAME_MENU_DATE_RESTAURANT_CONSTRAINT = "uk_dish_name_menu_date_restaurant";
-    public static final String DISH_DUPLICATE_NAME_EXCEPTION = "duplicate dish names";
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id", nullable = false)
-    Restaurant restaurant;
+    @ToString.Exclude
+    private Restaurant restaurant;
 
     @Column(name = "menu_date", nullable = false)
-    LocalDate menuDate;
+    private LocalDate menuDate;
 
     @Column(name = "cost", nullable = false)
     @Range(min = 1)
     @NotNull
-    long cost;
+    private long cost;
 
     public Dish(Integer id, LocalDate menuDate, String name, long cost) {
         super(id, name);

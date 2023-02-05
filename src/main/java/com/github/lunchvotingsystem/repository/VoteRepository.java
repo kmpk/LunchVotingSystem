@@ -13,17 +13,17 @@ public interface VoteRepository extends JpaRepository<Vote, Integer> {
     Optional<Vote> findByUserIdAndDate(int userId, LocalDate date);
 
     @Query(value = """
-            SELECT restaurant_id AS restaurantId, COUNT(restaurant_id) AS count
-            FROM restaurant INNER JOIN vote v on restaurant.id = v.restaurant_id
-            WHERE date = :date
-            GROUP BY restaurant_id
-            ORDER BY count DESC, restaurantId
-            """, nativeQuery = true)
+            SELECT v.restaurant.id AS restaurantId, count(v) AS votesCount
+            FROM Vote v
+            WHERE v.date = :date
+            GROUP BY v.restaurant.id
+            ORDER BY votesCount DESC , restaurantId
+                 """)
     List<VoteCountProjection> countVotesByDate(LocalDate date);
 
     interface VoteCountProjection {
         Integer getRestaurantId();
 
-        Integer getCount();
+        Integer getVotesCount();
     }
 }

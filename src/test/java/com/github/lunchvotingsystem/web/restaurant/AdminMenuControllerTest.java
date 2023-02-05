@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.github.lunchvotingsystem.model.Dish.DISH_DUPLICATE_NAME_EXCEPTION;
+import static com.github.lunchvotingsystem.GlobalExceptionHandler.DISH_DUPLICATE_NAME_EXCEPTION;
 import static com.github.lunchvotingsystem.util.validation.NoHtml.EXCEPTION_NO_HTML;
 import static com.github.lunchvotingsystem.web.restaurant.AdminMenuController.REST_URL;
 import static com.github.lunchvotingsystem.web.restaurant.MenuTestData.*;
