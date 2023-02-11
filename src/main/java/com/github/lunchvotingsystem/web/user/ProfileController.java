@@ -16,6 +16,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import static com.github.lunchvotingsystem.config.CacheConfig.USERS_CACHE;
 import static com.github.lunchvotingsystem.util.ValidationUtil.assureIdConsistent;
 
 @RestController
@@ -35,7 +36,7 @@ public class ProfileController extends AbstractUserController {
     @DeleteMapping
     @Operation(summary = "delete logged user")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @CacheEvict(value = "users", allEntries = true)
+    @CacheEvict(value = USERS_CACHE, allEntries = true)
     public void delete(@AuthenticationPrincipal AuthUser authUser) {
         checkModificationRestriction(authUser.id());
         super.delete(authUser.id());
@@ -45,7 +46,7 @@ public class ProfileController extends AbstractUserController {
     @Operation(summary = "update logged user info")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Transactional
-    @CacheEvict(value = "users", key = "#userTo.email")
+    @CacheEvict(value = USERS_CACHE, key = "#userTo.email")
     @ApiResponse(responseCode = "422", content = @Content(schema = @Schema(hidden = true)))
     public void update(@RequestBody @Valid UserTo userTo, @AuthenticationPrincipal AuthUser authUser) {
         log.info("update {} with id={}", userTo, authUser.id());

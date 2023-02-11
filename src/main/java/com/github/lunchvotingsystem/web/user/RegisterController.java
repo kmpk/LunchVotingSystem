@@ -21,6 +21,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 
+import static com.github.lunchvotingsystem.config.CacheConfig.USERS_CACHE;
 import static com.github.lunchvotingsystem.util.ValidationUtil.checkNew;
 
 @RestController
@@ -42,7 +43,7 @@ public class RegisterController extends AbstractUserController {
     @Operation(summary = "register new user")
     @ApiResponse(responseCode = "403", description = "Authentication is not allowed here", content = @Content(schema = @Schema(hidden = true)))
     @ApiResponse(responseCode = "422", content = @Content(schema = @Schema(hidden = true)))
-    @CacheEvict(cacheNames = "users", key = "#userTo.email")
+    @CacheEvict(cacheNames = USERS_CACHE, key = "#userTo.email")
     public ResponseEntity<User> register(@Valid @RequestBody UserTo userTo) throws IllegalRequestDataException {
         log.info("register {}", userTo);
         checkNew(userTo);

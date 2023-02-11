@@ -43,7 +43,8 @@ GET `http://localhost:8889/api/profile/votes/{date}` - get logged user vote
 
 PUT `http://localhost:8889/api/profile/votes/{date}` - vote for restaurant
 
-GET `http://localhost:8889/api/restaurants/votes/{date}` - get voting result for date
+GET `http://localhost:8889/api/restaurants/votes/{date}` - get voting result for date, if provided date is today voting
+results may not be final
 
 ### Admin
 

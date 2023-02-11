@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 
+import static com.github.lunchvotingsystem.config.CacheConfig.RESTAURANT_MENU_CACHE;
 import static com.github.lunchvotingsystem.web.restaurant.AdminMenuController.REST_URL;
 
 @RestController
@@ -41,7 +42,7 @@ public class AdminMenuController {
 
     @DeleteMapping("/{id}/menus/{date}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @CacheEvict(value = "restMenu", key = "#date")
+    @CacheEvict(value = RESTAURANT_MENU_CACHE, key = "#date")
     @Operation(summary = "delete restaurant menu of the day for provided date")
     @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(hidden = true)))
     public void delete(@PathVariable int id, @PathVariable LocalDate date) {
@@ -51,7 +52,7 @@ public class AdminMenuController {
 
     @PutMapping(value = "/{id}/menus/{date}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @CacheEvict(value = "restMenu", key = "#date")
+    @CacheEvict(value = RESTAURANT_MENU_CACHE, key = "#date")
     @Operation(summary = "create or update restaurant menu of the day for provided date")
     @ApiResponse(responseCode = "422", content = @Content(schema = @Schema(hidden = true)))
     @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(hidden = true)))

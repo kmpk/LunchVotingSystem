@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.List;
 
+import static com.github.lunchvotingsystem.config.CacheConfig.VOTE_COUNTS_CACHE;
 import static com.github.lunchvotingsystem.web.restaurant.RestaurantVotingController.REST_URL;
 
 @RestController
@@ -30,8 +31,8 @@ public class RestaurantVotingController {
 
     @GetMapping("/{date}")
     @ResponseStatus(HttpStatus.OK)
-    @Cacheable(cacheNames = "voteCounts")
-    @Operation(summary = "get voting result for provided date, if provided date is today result may not be final")
+    @Cacheable(cacheNames = VOTE_COUNTS_CACHE)
+    @Operation(summary = "get voting result for provided date, if provided date is today result may not be final.")
     public List<VoteCountTo> get(@PathVariable LocalDate date) {
         log.info("get {}", date);
         return repository.countVotesByDate(date).stream()

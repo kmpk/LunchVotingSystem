@@ -10,7 +10,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -40,7 +39,6 @@ public class UserVoteController {
 
     @PutMapping(value = "/{date}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @CacheEvict(value = "voteCounts", key = "#date")
     @Operation(summary = "set user vote for restaurant at provided date")
     @ApiResponse(responseCode = "400", description = "Cannot vote not for today or change vote after deadline", content = @Content(schema = @Schema(hidden = true)))
     @ApiResponse(responseCode = "422", content = @Content(schema = @Schema(hidden = true)))

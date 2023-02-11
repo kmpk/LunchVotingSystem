@@ -18,6 +18,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
 
+import static com.github.lunchvotingsystem.config.CacheConfig.USERS_CACHE;
 import static com.github.lunchvotingsystem.util.ValidationUtil.*;
 
 @RestController
@@ -40,7 +41,7 @@ public class AdminUserController extends AbstractUserController {
     @Override
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @CacheEvict(value = "users", allEntries = true)
+    @CacheEvict(value = USERS_CACHE, allEntries = true)
     @Operation(summary = "delete user")
     @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(hidden = true)))
     public void delete(@PathVariable int id) {
@@ -71,7 +72,7 @@ public class AdminUserController extends AbstractUserController {
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @CacheEvict(value = "users", key = "#user.email")
+    @CacheEvict(value = USERS_CACHE, key = "#user.email")
     @Operation(summary = "update user info")
     @ApiResponse(responseCode = "422", content = @Content(schema = @Schema(hidden = true)))
     @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(hidden = true)))

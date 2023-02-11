@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.List;
 
+import static com.github.lunchvotingsystem.config.CacheConfig.RESTAURANT_MENU_CACHE;
 import static com.github.lunchvotingsystem.web.restaurant.RestaurantMenuController.REST_URL;
 
 @RestController
@@ -31,7 +32,7 @@ public class RestaurantMenuController {
 
     @GetMapping("/{date}")
     @ResponseStatus(HttpStatus.OK)
-    @Cacheable(cacheNames = "restMenu")
+    @Cacheable(cacheNames = RESTAURANT_MENU_CACHE)
     @Operation(summary = "get all restaurants with menu of the day for provided date")
     public List<RestaurantMenuTo> get(@PathVariable LocalDate date) {
         log.info("get {}", date);
