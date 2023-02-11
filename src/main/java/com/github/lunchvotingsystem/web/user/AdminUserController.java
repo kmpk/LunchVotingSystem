@@ -79,7 +79,7 @@ public class AdminUserController extends AbstractUserController {
         log.info("update {} with id={}", user, id);
         checkModificationRestriction(id);
         assureIdConsistent(user, id);
-        checkExisted(repository.findById(id), id);
+        checkExistedResource(repository.findById(id), id);
         prepareAndSave(user);
     }
 

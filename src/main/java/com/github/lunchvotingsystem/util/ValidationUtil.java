@@ -26,46 +26,46 @@ public class ValidationUtil {
         }
     }
 
-    public static <T> T checkExistedStrict(T obj, int id) {
+    public static <T> T checkExistedEntity(T obj, int id) {
         if (obj == null) {
             throw new IllegalRequestDataException(getMessage(id));
         }
         return obj;
     }
 
-    public static void checkExistedStrict(boolean exists, int id) {
+    public static void checkExistedEntity(boolean exists, int id) {
         if (!exists) {
             throw new IllegalRequestDataException(getMessage(id));
         }
     }
 
-    public static void checkModification(int count, int id) {
+    public static void checkResourceModification(int count, int id) {
         if (count == 0) {
             throw new NotFoundException(getMessage(id));
         }
     }
 
-    public static void checkModification(int count, LocalDate date) {
+    public static void checkResourceModification(int count, LocalDate date) {
         if (count == 0) {
             throw new NotFoundException(getMessage(date));
         }
     }
 
-    public static <T> T checkExisted(T obj, int id) {
+    public static <T> T checkExistedResource(T obj, int id) {
         if (obj == null) {
             throw new NotFoundException(getMessage(id));
         }
         return obj;
     }
 
-    public static <T> T checkExisted(Optional<T> obj, int id) {
+    public static <T> T checkExistedResource(Optional<T> obj, int id) {
         if (obj.isEmpty()) {
             throw new NotFoundException(getMessage(id));
         }
         return obj.get();
     }
 
-    public static void checkExisted(boolean exists, int id) {
+    public static void checkExistedResource(boolean exists, int id) {
         if (!exists) {
             throw new NotFoundException(getMessage(id));
         }

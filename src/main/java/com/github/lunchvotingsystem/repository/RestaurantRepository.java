@@ -14,7 +14,6 @@ public interface RestaurantRepository extends BaseRepository<Restaurant> {
              menu_date AS menuDate, d.id AS dishId, d.name AS dishName, cost
             FROM restaurant INNER JOIN dish d on restaurant.id = d.restaurant_id
             WHERE menu_date = :date
-            ORDER BY id
             """, nativeQuery = true)
     List<Tuple> getWithTodayDishes(LocalDate date);
 }

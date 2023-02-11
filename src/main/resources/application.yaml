@@ -13,7 +13,8 @@ spring:
         format_sql: true
         default_batch_fetch_size: 20
         # https://stackoverflow.com/questions/21257819/what-is-the-difference-between-hibernate-jdbc-fetch-size-and-hibernate-jdbc-batc
-        jdbc.batch_size: 20
+        jdbc:
+          batch_size: 20
   datasource:
     # ImMemory
     url: jdbc:h2:mem:db
@@ -22,11 +23,16 @@ spring:
     password:
 
   # Jackson Serialization Issue Resolver
-  jackson.visibility:
-    field: any
-    getter: none
-    setter: none
-    is-getter: none
+  jackson:
+    visibility:
+      field: any
+      getter: none
+      setter: none
+      is-getter: none
+  cache:
+    cache-names: users, restMenu, voteCounts
+    caffeine:
+      spec: maximumSize=5000,expireAfterAccess=60s
 
 logging:
   level:
@@ -34,16 +40,15 @@ logging:
     com.github.lunchvotingsystem: DEBUG
     org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver: DEBUG
 
-server.servlet:
-  encoding:
-    charset: UTF-8 # Charset of HTTP requests and responses. Added to the "Content-Type" header if not set explicitly
-    enabled: true # Enable http encoding support
-    force: true
 server:
+  servlet:
+    encoding:
+      charset: UTF-8 # Charset of HTTP requests and responses. Added to the "Content-Type" header if not set explicitly
+      enabled: true # Enable http encoding support
+      force: true
   port: 8889
 
-springdoc.swagger-ui.path: /open-api
+springdoc:
+  swagger-ui:
+    path: /open-api
 
-cache:
-  cache-names: users, restMenu, voteCounts
-  caffeine.spec: maximumSize=5000,expireAfterAccess=60s

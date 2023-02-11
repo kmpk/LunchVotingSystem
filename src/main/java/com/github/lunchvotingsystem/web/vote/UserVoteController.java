@@ -46,6 +46,6 @@ public class UserVoteController {
     @ApiResponse(responseCode = "422", content = @Content(schema = @Schema(hidden = true)))
     public void update(@PathVariable LocalDate date, @RequestBody @Valid VoteTo vote, @AuthenticationPrincipal AuthUser authUser) {
         log.info("update {} with {}", date, vote.getRestaurantId());
-        service.update(authUser.id(), vote.getRestaurantId(), date);
+        service.update(authUser.id(), vote, date);
     }
 }

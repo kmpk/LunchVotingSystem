@@ -9,12 +9,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 
-
+@Transactional(readOnly = true)
 public interface DishRepository extends JpaRepository<Dish, Integer> {
 
     List<Dish> getAllByRestaurantIdAndMenuDate(int restaurantId, LocalDate menuDate);
 
-    @Transactional
     @Modifying
     @Query("DELETE FROM Dish d WHERE d.restaurant.id=:restaurantId AND d.menuDate=:menuDate")
     int deleteByRestaurantIdAndMenuDate(int restaurantId, LocalDate menuDate);

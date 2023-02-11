@@ -85,7 +85,7 @@ public class AdminRestaurantController {
     public void update(@Valid @RequestBody Restaurant restaurant, @PathVariable int id) {
         log.info("update {} with id={}", restaurant, id);
         assureIdConsistent(restaurant, id);
-        checkExisted(repository.existsById(id), id);
+        checkExistedResource(repository.existsById(id), id);
         repository.save(restaurant);
     }
 }

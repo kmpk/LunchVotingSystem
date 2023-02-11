@@ -14,18 +14,17 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-import static com.github.lunchvotingsystem.util.ValidationUtil.*;
+import static com.github.lunchvotingsystem.util.ValidationUtil.checkExistedResource;
+import static com.github.lunchvotingsystem.util.ValidationUtil.checkResourceModification;
 
 @Service
 @AllArgsConstructor
-@Transactional
 public class MenuService {
     private final RestaurantRepository restaurantRepository;
     private final DishRepository dishRepository;
 
-    @Transactional(readOnly = true)
     public Optional<MenuTo> findByDate(int restaurantId, LocalDate date) {
-        checkExistedStrict(restaurantRepository.existsById(restaurantId), restaurantId);
+        checkExistedResource(restaurantRepository.existsById(restaurantId), restaurantId);
         List<Dish> dishes = dishRepository.getAllByRestaurantIdAndMenuDate(restaurantId, date);
         if (dishes.isEmpty()) {
             return Optional.empty();
@@ -33,13 +32,15 @@ public class MenuService {
         return Optional.of(MenusUtil.createMenu(dishes));
     }
 
+    @Transactional
     public void deleteExisted(int restaurantId, LocalDate date) {
-        checkExisted(restaurantRepository.existsById(restaurantId), restaurantId);
-        checkModification(dishRepository.deleteByRestaurantIdAndMenuDate(restaurantId, date), date);
+        checkExistedResource(restaurantRepository.existsById(restaurantId), restaurantId);
+        checkResourceModification(dishRepository.deleteByRestaurantIdAndMenuDate(restaurantId, date), date);
     }
 
+    @Transactional
     public void update(int restaurantId, LocalDate date, MenuTo menu) {
-        Restaurant restaurant = checkExisted(restaurantRepository.findById(restaurantId), restaurantId);
+        Restaurant restaurant = checkExistedResource(restaurantRepository.findById(restaurantId), restaurantId);
         dishRepository.deleteByRestaurantIdAndMenuDate(restaurantId, date);
         dishRepository.saveAll(MenusUtil.prepareToSave(menu.getDishes(), date, restaurant));
     }

@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.*;
 import java.util.Optional;
 
-import static com.github.lunchvotingsystem.util.ValidationUtil.checkExistedStrict;
+import static com.github.lunchvotingsystem.util.ValidationUtil.checkExistedEntity;
 
 @Service
 public class VoteService {
@@ -35,15 +35,15 @@ public class VoteService {
         this.clock = clock;
     }
 
-    @Transactional(readOnly = true)
     public Optional<VoteTo> findByDate(int userId, LocalDate date) {
         return voteRepository.findByUserIdAndDate(userId, date).map(VotesUtil::getToFromVote);
     }
 
     @Transactional
-    public void update(int userId, int restaurantId, LocalDate date) {
+    public void update(int userId, VoteTo vote, LocalDate date) {
         checkVoteDay(date);
-        checkExistedStrict(restaurantRepository.existsById(restaurantId), restaurantId);
+        int restaurantId = vote.getRestaurantId();
+        checkExistedEntity(restaurantRepository.existsById(restaurantId), restaurantId);
         User user = userRepository.getReferenceById(userId);
         Optional<Vote> voteOptional = voteRepository.findByUserIdAndDate(userId, date);
         Vote newVote = new Vote(user, restaurantRepository.getReferenceById(restaurantId), date);
